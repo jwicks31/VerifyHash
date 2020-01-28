@@ -4,6 +4,9 @@ contract VerifyHash {
     //
     // State variables
     //
+    bool private stopped = false;
+    address private owner;
+
     struct Multihash {
         bytes32 digest;
         uint8 hashFunction;
@@ -16,7 +19,6 @@ contract VerifyHash {
     }
     mapping (address => User) users;
     mapping (bytes32 => Multihash) private hashes;
-    address public owner;
 
     //
     // Events - publicize actions to external listeners
@@ -29,6 +31,11 @@ contract VerifyHash {
         uint entryCount
     );
 
+    modifier isAdmin() {if(msg.sender != owner) revert('You are not the contract owner'); _;}
+
+
+    modifier stopInEmergency {if (!stopped) _;}
+
     //
     // Functions
     //
@@ -36,8 +43,13 @@ contract VerifyHash {
         owner = msg.sender;
     }
 
+    function toggleContractActive() public isAdmin
+    {
+        stopped = !stopped;
+    }
+
     function setEntry(bytes32 _digest, uint8 _hashFunction, uint8 _size)
-        public
+        public stopInEmergency
         {
             Multihash memory entry = Multihash(_digest, _hashFunction, _size, users[msg.sender].entryCount);
             users[msg.sender].entries[users[msg.sender].entryCount] = entry;

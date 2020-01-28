@@ -7,7 +7,8 @@
     "test": "test"
   },
   "dependencies": {
-    "multihashes": "0.4.15"
+    "multihashes": "0.4.15",
+    "truffle-hdwallet-provider": "1.0.17"
   },
   "devDependencies": {},
   "scripts": {
