@@ -7,7 +7,9 @@ const FETCH_FROM_IPFS_ERROR = 'FETCH_FROM_IPFS_ERROR';
 
 export const slice = 'IPFS';
 export const initialState = {
-  results: [],
+  results: {},
+  isFetching: {},
+  isSending: false,
   error: {
     status: false,
     message: ''
@@ -32,9 +34,9 @@ export const fetchFromIPFSSuccess = result => ({
   type: FETCH_FROM_IPFS_SUCCESS,
   payload: result
 });
-export const fetchFromIPFSError = error => ({
+export const fetchFromIPFSError = (error, hash) => ({
   type: FETCH_FROM_IPFS_ERROR,
-  payload: error
+  payload: { error, hash }
 });
 
 /* Selectors */
@@ -42,6 +44,8 @@ export const getError = state =>
   state[slice].error.status && state[slice].error.message;
 export const getIPFSResults = state =>
   state[slice].results
+export const getIPFSIsFetching = state => state[slice].isFetching;
+export const getIPFSIsSending = state => state[slice].isSending;
 
 /* Reducer */
 export const reducer = (state = initialState, { type, payload }) => {
@@ -52,6 +56,7 @@ export const reducer = (state = initialState, { type, payload }) => {
         error: {
           ...initialState.error
         },
+        isSending: true,
         text: payload
       };
     case SEND_TO_IPFS_SUCCESS:
@@ -60,6 +65,7 @@ export const reducer = (state = initialState, { type, payload }) => {
         error: {
           ...initialState.error
         },
+        isSending: false,
         text: ''
       };
     case SEND_TO_IPFS_ERROR:
@@ -68,13 +74,18 @@ export const reducer = (state = initialState, { type, payload }) => {
         error: {
           status: true,
           message: payload
-        }
+        },
+        isSending: false
       };
     case FETCH_FROM_IPFS:
       return {
         ...state,
         error: {
           ...initialState.error
+        },
+        isFetching: {
+          ...state.isFetching,
+          [payload.hash]: true
         },
         text: ''
       };
@@ -83,6 +94,10 @@ export const reducer = (state = initialState, { type, payload }) => {
         ...state,
         error: {
           ...initialState.error
+        },
+        isFetching: {
+          ...state.isFetching,
+          [payload.hash]: false
         },
         results: {
           ...state.results,
@@ -94,7 +109,15 @@ export const reducer = (state = initialState, { type, payload }) => {
         ...state,
         error: {
           status: true,
-          message: payload
+          message: payload.error
+        },
+        result: {
+          ...state.results,
+          [payload.hash]: 'Error Retrieving From IPFS'
+        },
+        isFetching: {
+          ...state.isFetching,
+          [payload.hash]: false
         }
       };
     default:

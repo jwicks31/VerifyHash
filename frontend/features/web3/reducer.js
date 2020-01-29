@@ -15,6 +15,7 @@ export const initialState = {
   accounts: [],
   contract: null,
   entries: [],
+  isLoading: false,
   error: {
     status: false,
     message: ''
@@ -52,6 +53,7 @@ export const sendVerifyHashError = error => ({
 
 /* Selectors */
 export const getAccounts = state => state[slice].accounts;
+export const getIsLoading = state => state[slice].isLoading;
 export const getContract = state => state[slice].contract;
 export const getEntries = state => state[slice].entries;
 export const getError = state =>
@@ -87,6 +89,7 @@ export const reducer = (state = initialState, { type, payload }) => {
     case FETCH_ENTRIES:
       return {
         ...state,
+        isLoading: true,
         error: {
           ...initialState.error
         }
@@ -94,6 +97,7 @@ export const reducer = (state = initialState, { type, payload }) => {
     case FETCH_ENTRIES_SUCCESS:
       return {
         ...state,
+        isLoading: false,
         error: {
           ...initialState.error
         },
@@ -102,6 +106,7 @@ export const reducer = (state = initialState, { type, payload }) => {
     case FETCH_ENTRIES_ERROR:
       return {
         ...state,
+        isLoading: false,
         error: {
           status: true,
           message: payload

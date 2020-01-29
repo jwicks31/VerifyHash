@@ -68,3 +68,4 @@ out
 .env-production
 
 users.js
+mnemonic.json

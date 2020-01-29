@@ -1,0 +1,52 @@
+Starting migrations...
+======================
+> Network name:    'ropsten'
+> Network id:      3
+> Block gas limit: 0x7a121d
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0xfc6b7ca238bcdc1fbd72a9c5ee1f70a9279b1a7d38d73971bcc397500beb85a8
+   > Blocks: 1            Seconds: 48
+   > contract address:    0x2FB54f12E688C6151F77B894F8e1475A80B330A9
+   > block number:        7216406
+   > block timestamp:     1580266694
+   > account:             0x60011Cb1ACb1f379dCEd7f34Eb61fE29F9b48AA6
+   > balance:             2.978297837166400858
+   > gas used:            225237
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00450474 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.00450474 ETH
+
+
+2_deploy_contracts.js
+=====================
+
+   Replacing 'VerifyHash'
+   ----------------------
+   > transaction hash:    0x24bfdac8fb6fbc4b2c9212de4b209f2fadfe0415b81310cb320ed1129ab7bac8
+   > Blocks: 2            Seconds: 16
+   > contract address:    0x73eeDec4CeeDd0BfB1c2c0402be1208eA5379306
+   > block number:        7216410
+   > block timestamp:     1580266739
+   > account:             0x60011Cb1ACb1f379dCEd7f34Eb61fE29F9b48AA6
+   > balance:             2.965660777166400858
+   > gas used:            589490
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.0117898 ETH
+
+Summary
+=======
+  > Total deployments:   2
+  > Final cost:          0.01629454 ETH
