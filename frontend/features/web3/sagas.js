@@ -12,11 +12,11 @@ import {
   getAccounts
 } from './reducer';
 import { takeEvery, call, put, select } from 'redux-saga/effects';
-import VerifyHash from '../../../build/contracts/VerifyHash';
-import Utils from '../../../helpers';
+import VerifyHash from './VerifyHash.json';
+import Utils from '../../helpers.js';
 import Web3 from 'web3';
 
-const contractAddress = '0x73eeDec4CeeDd0BfB1c2c0402be1208eA5379306';
+const contractAddress = '0x75B0A79D7ec3E6A6728db0E01f8BdC95F59027e4';
 
 export function* initWeb3Saga() {
   // Modern dapp browsers...
@@ -82,7 +82,7 @@ export function* watchSendVerifyHash() {
 export function* fetchEntriesSaga() {
   const contract = yield select(getContract);
   const accounts = yield select(getAccounts);
-  const entries = yield call(contract.methods.getEntries(accounts[0]).call);
+  const entries = yield call(contract.methods.getEntries(accounts[0], 0, 500).call);
   const [digestArray, hashFunctionArray, sizeArray, creationDateArray] = [
     entries[0],
     entries[1],

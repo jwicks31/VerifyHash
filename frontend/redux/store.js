@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { logger } from 'redux-logger';
-import myContractArtifacts from '../../build/contracts/VerifyHash.json'
+import myContractArtifacts from '../features/web3/VerifyHash.json'
 import { rootReducer } from './reducers';
 import mySaga from './sagas';
 

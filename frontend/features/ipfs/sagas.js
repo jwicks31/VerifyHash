@@ -15,8 +15,7 @@ import {
 } from './reducer';
 import { sendVerifyHash } from '../web3/reducer';
 import { takeEvery, call, put } from 'redux-saga/effects';
-import VerifyHash from '../../../build/contracts/VerifyHash';
-import Utils from '../../../helpers';
+import Utils from '../../helpers.js';
 
 const string2Bin = str => {
   var result = [];

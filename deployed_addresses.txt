@@ -10,13 +10,13 @@ Starting migrations...
 
    Replacing 'Migrations'
    ----------------------
-   > transaction hash:    0xfc6b7ca238bcdc1fbd72a9c5ee1f70a9279b1a7d38d73971bcc397500beb85a8
-   > Blocks: 1            Seconds: 48
-   > contract address:    0x2FB54f12E688C6151F77B894F8e1475A80B330A9
-   > block number:        7216406
-   > block timestamp:     1580266694
+   > transaction hash:    0x2cfc3314d1ace5ac975c07b7a1fea6da479bceae37eb3f07cee8ad287d930b0a
+   > Blocks: 1            Seconds: 12
+   > contract address:    0xf549F790385f7C84C08E9D1bb90637E55a46deF9
+   > block number:        7225345
+   > block timestamp:     1580350138
    > account:             0x60011Cb1ACb1f379dCEd7f34Eb61fE29F9b48AA6
-   > balance:             2.978297837166400858
+   > balance:             2.897684434729492894
    > gas used:            225237
    > gas price:           20 gwei
    > value sent:          0 ETH
@@ -34,19 +34,26 @@ Starting migrations...
 
    Replacing 'VerifyHash'
    ----------------------
-   > transaction hash:    0x24bfdac8fb6fbc4b2c9212de4b209f2fadfe0415b81310cb320ed1129ab7bac8
-   > Blocks: 2            Seconds: 16
-   > contract address:    0x73eeDec4CeeDd0BfB1c2c0402be1208eA5379306
-   > block number:        7216410
-   > block timestamp:     1580266739
+   > transaction hash:    0x19440d5515e86eb951a6a01183782640f562984a70e89b03938e8eee790d82cd
+   > Blocks: 1            Seconds: 48
+   > contract address:    0x75B0A79D7ec3E6A6728db0E01f8BdC95F59027e4
+   > block number:        7225349
+   > block timestamp:     1580350240
    > account:             0x60011Cb1ACb1f379dCEd7f34Eb61fE29F9b48AA6
-   > balance:             2.965660777166400858
-   > gas used:            589490
+   > balance:             2.882452714729492894
+   > gas used:            719223
    > gas price:           20 gwei
    > value sent:          0 ETH
-   > total cost:          0.0117898 ETH
+   > total cost:          0.01438446 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.01438446 ETH
+
 
 Summary
 =======
-  > Total deployments:   2
-  > Final cost:          0.01629454 ETH
+> Total deployments:   2
+> Final cost:          0.0188892 ETH

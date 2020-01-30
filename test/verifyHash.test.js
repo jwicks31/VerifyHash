@@ -42,7 +42,7 @@ contract('VerifyHash', accounts => {
   }
 
   async function getIPFSHashes(address) {
-    const result = await verifyHash.getEntries(address);
+    const result = await verifyHash.getEntries(address, 0, 5);
     const [digestArray, hashFunctionArray, sizeArray, creationDateArray] = [
       result[0],
       result[1],
@@ -155,15 +155,69 @@ contract('VerifyHash', accounts => {
     const bobHashes = await getIPFSHashes(bob);
     const { hash, creationDate } = aliceHashes[0];
     const { hash: hash2 } = bobHashes[0];
-    expect(hash).to.deep.equal(ipfsHashes[0]);
-    expect(hash2).to.deep.equal(ipfsHashes[1]);
+    expect(hash).to.equal(ipfsHashes[0]);
+    expect(hash2).to.equal(ipfsHashes[1]);
+  });
+
+  it('should not set entry if bad format', async () => {
+    try {
+      await verifyHash.setEntry('digest', 'hashFunction', 'size', {
+        from: alice
+      });
+    } catch (e) {
+      expect(e.message).to.contain('invalid bytes32')
+    }
+    const aliceHashes = await getIPFSHashes(alice);
+    const { hash } = alice[0];
+    expect(hash).to.equal(undefined);
+  });
+
+  it('should only return the requested number of entries', async () => {
+    await setIPFSHash(alice, ipfsHashes[0]);
+    await setIPFSHash(alice, ipfsHashes[1]);
+    const result = await verifyHash.getEntries(alice, 0, 1);
+    const [digestArray, hashFunctionArray, sizeArray, creationDateArray, newCursorLength] = [
+      result[0],
+      result[1],
+      result[2],
+      result[3],
+      result[4]
+    ];
+    const aliceHashes =  digestArray.map((digest, i) => ({
+      hash: bytes32ToMultiHash({
+        hashFunction: hashFunctionArray[i].toNumber(),
+        digest,
+        size: sizeArray[i].toNumber()
+      }),
+      creationDate: creationDateArray[i]
+    }));
+    const { hash } = aliceHashes[0];
+    expect(hash).to.equal(ipfsHashes[0]);
+    expect(aliceHashes[1]).to.equal(undefined);
+    expect(newCursorLength.toNumber()).to.equal(1);
   });
 
   it('should have a creation date', async () => {
     await setIPFSHash(alice, ipfsHashes[0]);
     const aliceHashes = await getIPFSHashes(alice);
     const { hash, creationDate } = aliceHashes[0];
-    expect(hash).to.deep.equal(ipfsHashes[0]);
+    expect(hash).to.equal(ipfsHashes[0]);
     expect(creationDate).to.exist;
+  });
+
+  it('should not allow the same hash to be stored twice', async () => {
+    await setIPFSHash(alice, ipfsHashes[0]);
+    await catchRevert(setIPFSHash(bob, ipfsHashes[0]));
+    const aliceHashes = await getIPFSHashes(alice);
+    const bobHashes = await getIPFSHashes(bob);
+    const { hash, creationDate } = aliceHashes[0];
+    expect(hash).to.equal(ipfsHashes[0]);
+    expect(bobHashes[0]).to.equal(undefined);
+  });
+
+  it('should get entry length', async () => {
+    await setIPFSHash(alice, ipfsHashes[0]);
+    const aliceLength = await verifyHash.getEntriesLength(alice)
+    expect(aliceLength.toNumber()).to.equal(1);
   });
 });

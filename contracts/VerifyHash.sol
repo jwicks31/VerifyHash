@@ -13,6 +13,7 @@ contract VerifyHash {
         uint8 size;
         uint id;
         uint256 creation_date;
+        uint8 flag;
     }
     struct User {
         uint entryCount;
@@ -52,7 +53,9 @@ contract VerifyHash {
     function setEntry(bytes32 _digest, uint8 _hashFunction, uint8 _size)
         public stopInEmergency
         {
-            Multihash memory entry = Multihash(_digest, _hashFunction, _size, users[msg.sender].entryCount, now);
+            Multihash memory previousEntry = hashes[_digest];
+            require (previousEntry.flag != 1, "This hash already exists.");
+            Multihash memory entry = Multihash(_digest, _hashFunction, _size, users[msg.sender].entryCount, now, 1);
             users[msg.sender].entries[users[msg.sender].entryCount] = entry;
             hashes[_digest] = entry;
             emit EntrySet(
@@ -65,23 +68,35 @@ contract VerifyHash {
             users[msg.sender].entryCount ++;
         }
 
-    function getEntries(address _address)
-        public view returns (bytes32[] memory, uint8[] memory, uint8[] memory, uint256[] memory)
+    function getEntries(address _address, uint256 cursor, uint256 howMany)
+        public view returns (bytes32[] memory, uint8[] memory, uint8[] memory, uint256[] memory, uint256 newCursor)
         {
             User storage user = users[_address];
-            bytes32[]    memory digest = new bytes32[](user.entryCount);
-            uint8[]  memory hashFunction = new uint8[](user.entryCount);
-            uint8[]    memory size = new uint8[](user.entryCount);
-            uint256[] memory creation_date = new uint256[](user.entryCount);
-            for (uint i = 0; i < user.entryCount; i++) {
-                Multihash storage multihash = user.entries[i];
-                digest[i] = multihash.digest;
-                hashFunction[i] = multihash.hashFunction;
-                size[i] = multihash.size;
-                creation_date[i] = multihash.creation_date;
+            uint256 length = howMany;
+            if (length > user.entryCount - cursor) {
+                length = user.entryCount - cursor;
             }
 
-            return (digest, hashFunction, size, creation_date);
+            bytes32[]    memory digest = new bytes32[](length);
+            uint8[]  memory hashFunction = new uint8[](length);
+            uint8[]    memory size = new uint8[](length);
+            uint256[] memory creation_date = new uint256[](length);
+            for (uint i = 0; i < length; i++) {
+                uint cursorInt = cursor + i;
+                Multihash storage multihash = user.entries[cursorInt];
+                digest[cursorInt] = multihash.digest;
+                hashFunction[cursorInt] = multihash.hashFunction;
+                size[cursorInt] = multihash.size;
+                creation_date[cursorInt] = multihash.creation_date;
+            }
+            newCursor = cursor + length;
+            return (digest, hashFunction, size, creation_date, newCursor);
+        }
+
+    function getEntriesLength(address _address)
+        public view returns (uint256 length)
+        {
+            return (users[_address].entryCount);
         }
 
     function getEntry(bytes32 _digest)

@@ -7,19 +7,20 @@ import {
   getContract,
   getAccounts,
   getEntries,
-  getIsLoading
+  getIsLoading,
+  getError as getWeb3Error
 } from '../features/web3/reducer';
 import {
   fetchFromIPFS,
   getIPFSResults,
   getIPFSIsFetching,
-  getIPFSIsSending
+  getIPFSIsSending,
+  getError as getIPFSError
 } from '../features/ipfs/reducer';
 
 import { sendToIPFS } from '../features/ipfs/reducer';
 import { Form, Icon, Input, Button, List } from 'antd';
 import Web3 from 'web3';
-import Utils from '../../helpers';
 
 const { TextArea } = Input;
 const hasErrors = (fieldsError) => Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -195,11 +196,13 @@ class Index extends React.Component {
   }
 
   render() {
-    const { accounts } = this.props;
+    const { accounts, web3Error, ipfsError } = this.props;
     return accounts.length !== 0 ? (
       <>
         <WrappedTextUploadForm />
         <Entries />
+        <div>{ipfsError && ipfsError}</div>
+        <div>{web3Error && web3Error}</div>
       </>
     ) : (
       <NoMetaMask />
@@ -209,7 +212,9 @@ class Index extends React.Component {
 
 const mapStateToProps = state => ({
   accounts: getAccounts(state),
-  isFetchingEntries: getIsLoading(state)
+  isFetchingEntries: getIsLoading(state),
+  web3Error: getWeb3Error(state),
+  ipfsError: getIPFSError(state)
 });
 
 export default connect(mapStateToProps)(Index);
